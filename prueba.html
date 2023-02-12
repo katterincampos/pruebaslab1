@@ -202,6 +202,21 @@
                         .filter(alumno=>alumno.nombre.toLowerCase().indexOf(this.buscar.toLowerCase())>-1);
                 }
             },
+            abrirBD(){
+                let indexeDB = indexedDB.open('db_sistema_academico',1);
+                indexedDB.onupgradeneeded=e=>{
+                    let req = e.target.result,
+                     tblalumno = req.createObjectStore('tblalumnos', {keyPath:'idAlumno'});
+                    tblalumno.createIndex('idAlumno','idAlumno',{unique:true});
+                    tblalumno.createIndex('codigo','codigo',{unique:true});
+                };
+                indexedDB.onsusuccess=e=>{
+                    this.db = e.target.result;
+                };
+                indexedDB.onerror=e=>{
+                    console.error(e);
+                };
+    },
             created(){
                 this.listarAlumnos();
             }
